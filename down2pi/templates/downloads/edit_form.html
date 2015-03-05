@@ -1,0 +1,8 @@
+{% block modalheading %}
+<H2>Modifica articolo</H2>
+{% endblock %}
+{% block insidemodal %}
+<form method="POST" action="/down2pi/edit/{{ record_id }}/">{% csrf_token %}
+{{ form.as_p }}
+<button class="btn">Ok</button>
+{% endblock %}

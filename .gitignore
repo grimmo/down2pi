@@ -1,0 +1,9 @@
+*.pyc
+settings.py
+*.json
+*~
+*.swp
+*.zip
+*.orig
+DEADJOE
+db.sqlite3

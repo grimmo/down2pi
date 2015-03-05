@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="form_status"></div>
+{% if elenco %}
+	<style type="text/css">
+	 ul#dlist {
+	     list-style-type: none;
+	   }
+	</style>
+	{% include 'downloads/lista.html' %}
+{% else %}
+   <div id="lista">
+    <p>Non sono presenti downlad.</p>
+    </div>
+{% endif %}
+{% endblock %}
+{% block modalheading %}
+<H2>Aggiungi articolo</h2>
+{% endblock %}
+{% block insidemodal %}
+<form id="add2pi_form" action="/down2pi/add" method="POST">{% csrf_token %}
+{{ form.non_field_errors }}
+{{ form.as_p }}
+<div id="form_ajax_error" style="color: red">
+<span id="error_msg"></span>
+</div>
+</form>
+<button class="btn" id="addurl_btn">Aggiungi</button>
+{% endblock %}
+{% block footer %}
+<!-- Last seen goes here -->
+<h3>Client last seen:  {{ last_seen }}</h3>
+{% endblock %}
+{% block finalscripts %}
+<script>
+	$("#addurl_btn").click(function()
+{
+	$("#add2pi_form").submit(function(e)
+	{
+		var postData = $(this).serializeArray();
+		var formURL = $(this).attr("action");
+		$.ajax(
+		{
+			url : formURL,
+			type: "POST",
+			data : postData,
+			success:function(data) 
+			{
+				if(data.success === false) {
+					console.log('its false');
+					console.log(data.message)
+                			$('#form_ajax_error').html(JSON.stringify(data.message));
+				}
+				else {
+					console.log('its true');
+					$('#lista').replaceWith($(data));
+					location.replace('#');
+					$('#add2pi_form')[0].reset();
+					console.log(data)
+				}
+
+			},
+			statusCode: 
+			{
+            			400: function(jqXHR,textStatus,errorThrown) {
+                			$('#error_msg').html('textstatus='+textStatus+',jqXHR='+jqXHR.data.message+'errorThrown='+errorThrown+'');
+            			}
+			}
+		});
+	    e.preventDefault();	//STOP default action
+	});
+	$("#add2pi_form").submit(); //SUBMIT FORM
+})
+function elimina(record) {
+console.log('Ciao, hai chiamato elimina per il record '+record);
+$.ajax({
+url: '/down2pi/del/'+record+'/',
+method: 'POST',
+//context: document.body
+}).done(function(data) {
+$('#lista').replaceWith($(data));
+})
+}
+function edit(record) {
+console.log('Ciao, hai chiamato edit per il record '+record);
+$.ajax({
+url: '/down2pi/edit/'+record+'/',
+method: 'GET',
+}).done(function(data) {
+$('#insidemodal').replaceWith($(data));
+location.replace( '#modal' );
+})
+}
+function expire(giorni) {
+    console.log('Cancello i record creati negli ultimi '+giorni+' giorni.')
+    $.ajax({
+        url: '/down2pi/expire/'+giorni+'/',
+        method: 'GET',
+    }).done(function(data) {
+    $('#lista').replaceWith($(data));
+})
+}
+</script>
+{% endblock %}

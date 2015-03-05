@@ -1,0 +1,18 @@
+<div id="lista">
+<ul id="dlist">
+{% for d in elenco %}
+<li id="download-{{ d.id}}">
+{% if d.status == "DONE" %}  
+<span class="fa-stack fa-lg">
+  <i class="fa fa-square fa-stack-2x" style="color: green"></i>
+  <i class="fa fa-check fa-stack-1x fa-inverse" title="{{ d.status }}"></i>
+</span>
+{% elif d.status == "PRG" %}
+<i class="fa fa-refresh fa-spin fa-2x" title="{{ d.status }}"></i>
+{% else %}
+<i class="fa fa-circle-o fa-2x" title="{{ d.status }}"></i>
+{% endif %}&nbsp;<a href="{{ d.url }}" title="{{ d.cat }} into folder {{ d.folder }}">{{ d.shorturl }}</a>
+{{ d.data_creazione|timesince }}&nbsp;ago&nbsp;<button onclick="edit({{ d.id }});"><i class="fa fa-pencil-square-o"></i></button>&nbsp;<button onclick="elimina({{ d.id }});"><i class="text-error fa fa-times" style="color: red"></i></button></li>
+{% endfor %}
+</ul>
+</div> 
