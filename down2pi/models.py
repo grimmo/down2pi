@@ -13,7 +13,7 @@ class DownloadablesManager(models.Manager):
         return super(DownloadablesManager, self).get_queryset().exclude(category='Other').filter(status='New').order_by('created_on')
 
 class Download(models.Model):
-    url = models.URLField(unique=True,max_length='255',help_text='URL da scaricare',validators=[URLValidator])
+    url = models.URLField(unique=True,max_length=255,help_text='URL da scaricare',validators=[URLValidator])
     status = models.CharField(choices=STATUS,max_length=4,editable=True,default='NEW')
     data_creazione = models.DateTimeField(auto_now_add=True,editable=False)
     last_change = models.DateTimeField(auto_now=True,blank=True,null=True,editable=False)

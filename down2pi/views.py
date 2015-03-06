@@ -86,19 +86,13 @@ def multiadd(request):
     if request.method == 'POST': # If the form has been submitted...
         form = MultipleURLsForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
-            print "Form valido"
             AddURLForm = modelform_factory(Download,exclude=['status'])
             for splitted_url in form.data['url_list'].split('\r\n'):
                 download_data = {'url':splitted_url,'status':'NEW','cat':form.data['cat'],'folder':form.data['folder']}
-                print "download_data:%s" % download_data
                 download_form = AddURLForm(download_data)
                 if download_form.is_valid():
-                    print "Download Form valido"
                     d = download_form.save()
-                    print "Dato salvato:%s" % d
                 else:
-                    print "Sbaglio ci fu"
-                    print download_form.errors
                     break
                     form.errors = download_form.errors
                     return render_to_response('downloads/multiple_form_add.html', {'form':form})
