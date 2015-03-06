@@ -29,7 +29,8 @@
                     {% block headermenu %}
                     <ul>
                         <li><a href="#modal">Add</a></li>
-                        <li><a href="#" onclick="expire(7);">Expire old stuff</a></li>
+                        <!-- <li><a href="/down2pi/multiadd">Add Multi</a></li> -->
+                        <li><a href="#" onclick="expire(7);">Expire old</a></li>
                         <li><a href="/down2pi/logout">Log out</a></li>
                     </ul>
                     {% endblock %}
@@ -56,14 +57,15 @@
         {% endblock %}
 	</header>
 	<section>
-        <span id="insidemodal">
+        <div id="insidemodal">
 {% block insidemodal %}
 		Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 {% endblock %}
-        </span>
+        </div>
 	</section>
 	<footer class="cf">
-		<a href="#" class="btn">Close</a>
+        <button onclick="add_multiple_links();">+</button>
+        <button onclick="window.location.href='#';$('#insidemodal').replaceWith($('#default_modal'));console.log('Tutto fatto');">Close</button>
 	</footer>
 </aside>
         <script src="{% static "js/vendor/jquery-1.11.1.min.js" %}"</script>

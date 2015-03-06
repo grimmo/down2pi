@@ -15,8 +15,9 @@
 {% endif %}
 {% endblock %}
 {% block modalheading %}
-<H2>Aggiungi articolo</h2>
+<H2>Aggiungi link</h2>
 {% endblock %}
+<div id="default_modal">
 {% block insidemodal %}
 <form id="add2pi_form" action="/down2pi/add" method="POST">{% csrf_token %}
 {{ form.non_field_errors }}
@@ -27,6 +28,7 @@
 </form>
 <button class="btn" id="addurl_btn">Aggiungi</button>
 {% endblock %}
+</div>
 {% block footer %}
 <!-- Last seen goes here -->
 <h3>Client last seen:  {{ last_seen }}</h3>
@@ -85,6 +87,16 @@ function edit(record) {
 console.log('Ciao, hai chiamato edit per il record '+record);
 $.ajax({
 url: '/down2pi/edit/'+record+'/',
+method: 'GET',
+}).done(function(data) {
+$('#insidemodal').replaceWith($(data));
+location.replace( '#modal' );
+})
+}
+function add_multiple_links() {
+console.log('Ciao, hai chiamato add_multiple_links');
+$.ajax({
+url: '/down2pi/multiadd',
 method: 'GET',
 }).done(function(data) {
 $('#insidemodal').replaceWith($(data));

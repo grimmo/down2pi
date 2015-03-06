@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ModelForm
+from django.forms import ModelForm,Form,Textarea,CharField,ChoiceField
 from django.core.urlresolvers import reverse
 from django.core.validators import URLValidator
 
@@ -20,16 +20,16 @@ class Download(models.Model):
     cat = models.CharField(choices=TYPES,default='serie',max_length=5)
     folder = models.CharField(max_length=100,blank=True)
 
-    def __unicode__(self):
-        return u"%s %s (%s)" % (self.cat,self.url,self.status)
-
     def shorturl(self):
         if len(self.url) >=40:
-            return u'%s(...)%s' % (self.url[0:4],self.url[self.url.rindex('/'):])
+            #return u'%s(...)%s' % (self.url[0:4],self.url[self.url.rindex('/'):])
+            return u'http://(...)%s' % self.url[self.url.rindex('/')::]
         else:
             return self.url
 
-    def get_absolute_url(self):
+    def __unicode__(self):
+        return u"%s %s (%s)" % (self.cat,self.shorturl(),self.status)
+
         return self.url
 
     class Meta:
@@ -42,3 +42,8 @@ class URLForm(ModelForm):
     class Meta:
         model = Download
         fields = ['url','status','cat','folder']
+
+class MultipleURLsForm(Form):
+    url_list = CharField(widget=Textarea(),help_text="Inserisci l'elenco di link da scaricare, uno per riga")
+    cat = ChoiceField(choices=TYPES,initial='serie')
+    folder = CharField(max_length=100)

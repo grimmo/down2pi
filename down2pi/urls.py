@@ -6,6 +6,7 @@ from down2pi import views
 urlpatterns = patterns('',
 		    url(r'^$', views.index, name='index'),
                     url(r'^add$', views.add, name='add'),
+                    url(r'^multiadd$', views.multiadd, name='multiadd'),
                     url(r'^del/(?P<record_id>\d+)/$',views.dele,name='del'),
                     url(r'^edit/(?P<record_id>\d+)/$', views.edit,name='edit'),
                     url(r'^get_downloads/(?P<category>\w+)/$', views.get_downloads, name='get_downloads'),

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,get_object_or_404
-from down2pi.models import Download,URLForm,STATUS as valid_statuses
+from down2pi.models import Download,URLForm,MultipleURLsForm,STATUS as valid_statuses
 from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest
 from django.template import RequestContext, loader
 from django.views.decorators.csrf import csrf_protect
@@ -80,6 +80,38 @@ def add(request):
                 return render_to_response('downloads/index.html', {'elenco': elenco}, context_instance=RequestContext(request))
     else:
         return HttpResponse("This is a GET")
+
+@login_required
+def multiadd(request):
+    if request.method == 'POST': # If the form has been submitted...
+        form = MultipleURLsForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            print "Form valido"
+            AddURLForm = modelform_factory(Download,exclude=['status'])
+            for splitted_url in form.data['url_list'].split('\r\n'):
+                download_data = {'url':splitted_url,'status':'NEW','cat':form.data['cat'],'folder':form.data['folder']}
+                print "download_data:%s" % download_data
+                download_form = AddURLForm(download_data)
+                if download_form.is_valid():
+                    print "Download Form valido"
+                    d = download_form.save()
+                    print "Dato salvato:%s" % d
+                else:
+                    print "Sbaglio ci fu"
+                    print download_form.errors
+                    break
+                    form.errors = download_form.errors
+                    return render_to_response('downloads/multiple_form_add.html', {'form':form})
+            elenco = Download.objects.order_by('data_creazione')
+            if request.is_ajax():
+                return render_to_response('downloads/lista.html', {'elenco': elenco}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('downloads/index.html', {'elenco': elenco}, context_instance=RequestContext(request))
+    else:
+        form = MultipleURLsForm() 
+        return render_to_response('downloads/multiple_add_form.html', {'form': form}, context_instance=RequestContext(request))
+        #return HttpResponse("This is a GET")
+
 
 @login_required
 def edit(request,record_id):
