@@ -10,7 +10,7 @@ TYPES = (('serie','Serie TV'),('film','Film'),('other','Altro'))
 
 class DownloadablesManager(models.Manager):
     def get_queryset(self):
-        return super(DownloadablesManager, self).get_queryset().exclude(category='Other').filter(status='New').order_by('created_on')
+        return super(DownloadablesManager, self).get_queryset().exclude(status__exact='DONE').order_by('created_on')
 
 class Download(models.Model):
     url = models.URLField(unique=True,max_length=255,help_text='URL da scaricare',validators=[URLValidator])

@@ -102,7 +102,7 @@ def multiadd(request):
             else:
                 return render_to_response('downloads/index.html', {'elenco': elenco}, context_instance=RequestContext(request))
     else:
-        form = MultipleURLsForm() 
+        form = MultipleURLsForm()
         return render_to_response('downloads/multiple_add_form.html', {'form': form}, context_instance=RequestContext(request))
         #return HttpResponse("This is a GET")
 
@@ -129,7 +129,7 @@ def edit(request,record_id):
 #    template_name = 'downloads/edit_form.html'
 #    model = Download
 #    fields = ['url','folder','cat']
-    
+
 @login_required
 def view(request,pk):
     item = get_object_or_404(Download, pk=record_id)
@@ -151,7 +151,7 @@ def dele(request,record_id):
 
 #https://grimmo.pythonanywhere.com/default/call/json/get_downloads?download_type=Serie
 def get_downloads(request,category):
-    data = serializers.serialize('json',Download.ready.filter(cat=category).order_by('data_creazione'),fields=('url','cat','folder'))
+    data = serializers.serialize('json',Download.ready.filter(cat__exact=category).order_by('data_creazione'),fields=('url','cat','folder'))
     return HttpResponse(data, content_type='application/json')
 
 def toggle_status(request,record_id,status):
